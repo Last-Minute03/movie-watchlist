@@ -1,1 +1,1 @@
-Hey A-Man so far i did phase 0 and working on phase 1
+Did phase 1, working on phase 2

@@ -68,3 +68,82 @@ movieForm.addEventListener("submit", (event)=> {
 
 }
 );
+
+// >>>>>>>>>>>>>>>>
+//Phase 4
+// >>>>>>>>>>>>>>>>
+
+function createMovieCard(title, genre) {
+  // 1. Create the outer <li>
+  //    - give it the class "movie-card"
+  //    - use setAttribute to set data-genre to the genre value
+
+    const outLi = document.createElement("li");
+    outLi.classList.add("movie-card");
+    outLi.setAttribute("data-genre", genre);
+
+  // 2. Create a <div> for the info section — class "movie-info"
+  //    Inside it, create two <span> elements:
+  //    - one with class "movie-title" — set its textContent to title
+  //    - one with class "movie-genre" — set its textContent to genre (show "No genre" if empty)
+  //    Append both spans into the info div
+
+    const movInfDv = document.createElement("div");
+    movInfDv.classList.add("movie-info");
+
+        const spa1 = document.createElement("span");
+            spa1.classList.add("movie-title");
+            spa1.textContent = title
+        const spa2 = document.createElement("span");
+            spa2.classList.add("movie-genre");
+            if(genre === ''){
+                spa2.textContent = "No genre";
+            }
+            else[
+                spa2.textContent = genre
+            ]
+    movInfDv.appendChild(spa1);
+    movInfDv.appendChild(spa2);
+
+  // 3. Create a <div> for the buttons — class "movie-actions"
+  //    Inside it, create two <button> elements:
+  //    - one with class "watch-btn" — textContent "Mark Watched"
+  //    - one with class "remove-btn" — textContent "Remove"
+  //    Append both buttons into the actions div
+
+        const movAct = document.createElement("div");
+            const but1 = document.createElement("button");
+                but1.classList.add("watch-btn");
+                but1.textContent = "Mark Watched";
+            const but2 = document.createElement("button");
+                but2.classList.add("remove-btn");
+                but2.textContent = "Remove";
+
+        movAct.appendChild(but1);
+        movAct.appendChild(but2);
+
+  // 4. Append the info div and actions div into the <li>
+
+        outLi.appendChild(movInfDv);
+        outLi.appendChild(movAct);
+
+  
+  // 5. return the card — do NOT append it here
+  //    The function's job is to build and return. Appending is the caller's job.
+
+        return outLi;
+
+
+}
+
+// After reading the title and genre (and before form.reset()):
+
+// 1. Call createMovieCard(title, genre) — store the result in a variable
+// 2. Append the card to movieList
+// 3. // TODO: call updateCount() here — you'll write that function in Phase 6
+// 4. Call movieForm.reset()
+
+const mov1 = createMovieCard("bruh2", "bruhgenre");
+movieList.appendChild(mov1);
+updateCount();
+movieForm.reset();

@@ -1,1 +1,1 @@
-did phase 3 working on 4 yet again nothign happens yet in coding
+did phase 4 working on phase 5 now, most likely wont finish by the time of end of class

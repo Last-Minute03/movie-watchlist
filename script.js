@@ -131,6 +131,7 @@ function createMovieCard(title, genre) {
   // 5. return the card — do NOT append it here
   //    The function's job is to build and return. Appending is the caller's job.
 
+
         return outLi;
 
 

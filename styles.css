@@ -8,10 +8,16 @@ main{
     flex-wrap:wrap;
 }
 
+button{
+    cursor:pointer;
+}
+
 .filter-btn{
     /* background-color:red; */
     border-radius: 15px;
+    /* cursor: pointer; */
 }
+
 
 #movie-list{
     border: 4px solid green;

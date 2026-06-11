@@ -13,7 +13,9 @@ const clearWatchedbtn = document.getElementById("clear-watched-btn")
 // select ALL elements with class "filter-btn" using querySelectorAll
 // store them in filterBtns — you'll loop over them in Phase 6
 
-const filterBtns = document.querySelectorAll("filter-btn");
+const filterBtns = document.querySelectorAll(".filter-btn");
+
+let currentFilter = "all"; // this is needed for part B in Phase 6
 
 //Part A
 // Change the app title
@@ -58,8 +60,27 @@ movieForm.addEventListener("submit", (event)=> {
 
   // 4. Log both values to the console
   //    Type a title and genre, submit — confirm you see them in DevTools
+console.log("<<<SSSSSSSSSSS",title);
+console.log(">>???QQQQQQQQQ",genre);
+  
 
-  // 5. At the end, reset the form so the inputs are blank for the next entry
+// After reading the title and genre (and before form.reset()):
+
+// 1. Call createMovieCard(title, genre) — store the result in a variable
+// 2. Append the card to movieList
+// 3. // TODO: call updateCount() here — you'll write that function in Phase 6
+// 4. Call movieForm.reset()
+
+const mov1 = createMovieCard(title, genre);
+// mov1.classList.add("unwatched");  /// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+movieList.appendChild(mov1);
+updateCount();
+
+
+
+
+// 5. At the end, reset the form so the inputs are blank for the next entry
+
   movieForm.reset()
   //    .reset() clears all inputs in the form at once — no need to blank them one by one
 
@@ -79,6 +100,7 @@ function createMovieCard(title, genre) {
 
     const outLi = document.createElement("li");
     outLi.classList.add("movie-card");
+    // outLi.classList.add("unwatched"); // .>>>>>>>>.
     outLi.setAttribute("data-genre", genre);
 
   // 2. Create a <div> for the info section — class "movie-info"
@@ -93,6 +115,8 @@ function createMovieCard(title, genre) {
         const spa1 = document.createElement("span");
             spa1.classList.add("movie-title");
             spa1.textContent = title
+        
+        spa1.style.marginRight = "10px"; //this should add space between the 2 spans so they dont look like one word in post render
         const spa2 = document.createElement("span");
             spa2.classList.add("movie-genre");
             if(genre === ''){
@@ -162,8 +186,8 @@ movieList.addEventListener("click", (event) => {
             // return;
             
     }
-    // updateCount();
-    // applyFilter(currentFilter);
+    updateCount();
+    applyFilter(currentFilter);
 
   // 4. Was it the watch button?
   //    - Check: event.target.classList.contains("watch-btn")
@@ -184,7 +208,7 @@ movieList.addEventListener("click", (event) => {
     else{
         event.target.textContent = "Mark Watched";
     }
-    // applyFilter(currentFilter)
+    applyFilter(currentFilter)
 
 });
 
@@ -195,15 +219,119 @@ movieList.addEventListener("click", (event) => {
 // What does event.target.closest("li") do? 
 // Answer: IN THIS CASE , it targets the card made by outLi
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// PHASE 6
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-// After reading the title and genre (and before form.reset()):
+function updateCount() {
+  // 1. Query all cards in the list
+  //    hint: movieList.querySelectorAll(".movie-card").length
+    const movLen = movieList.querySelectorAll(".movie-card").length
+  // 2. Update movieCount.textContent
+  //    e.g. "3 movies" or "1 movie" — handle the singular if you want a bonus
+    if(movLen === 1){
+        movieCount.textContent = movLen + " movie";
+    }
+    else if(movLen === 0){
+        movieCount.textContent = "No Movies";
+    }
+    else{
+        movieCount.textContent = movLen + " movies";
+    }
+}
 
-// 1. Call createMovieCard(title, genre) — store the result in a variable
-// 2. Append the card to movieList
-// 3. // TODO: call updateCount() here — you'll write that function in Phase 6
-// 4. Call movieForm.reset()
 
-const mov1 = createMovieCard("bruh2", "bruhgenre");
-movieList.appendChild(mov1);
-updateCount();
-movieForm.reset();
+function updateFilterButtons(activeFilter) {
+  // 1. Loop over filterBtns
+    filterBtns.forEach((button)=>
+        {
+            button.classList.remove("active-filter");
+            if(button.id === "filter-" + activeFilter){
+                button.classList.add("active-filter");
+            }
+        }
+    );
+  // 2. On each button:
+  //    - first remove "active-filter" from every button
+  //    - then add it back only to the one whose id matches the active filter
+  //      hint: btn.id === "filter-" + activeFilter
+}
+
+
+
+function applyFilter(filter) {
+  // 1. Update the currentFilter variable so the rest of the app knows what's active
+    currentFilter = filter;
+  // 2. Update which button looks active
+  //    hint: call updateFilterButtons(filter)
+    updateFilterButtons(filter);
+  // 3. Get all cards in the list
+  //    hint: movieList.querySelectorAll(".movie-card")
+    const cards = movieList.querySelectorAll(".movie-card")
+  // 4. Loop over every card and decide: show it or hide it?
+  //    if filter === "all"       → show every card
+  //    if filter === "watched"   → show cards with .watched, hide the rest
+  //    if filter === "unwatched" → show cards without .watched, hide the rest
+  //    hint: card.classList.contains("watched") tells you the card's current state
+  //    hint: card.classList.add("filtered-out") hides it, .remove("filtered-out") shows it
+
+    cards.forEach((card) => {
+
+        if (filter === "all"){
+            if(card.classList.contains("watched") || !(card.classList.contains("watched")))
+            card.classList.remove("filtered-out");
+        }
+        else if (filter === "watched"){
+            if(card.classList.contains("watched")){
+                card.classList.remove("filtered-out");
+            }
+            else{
+                card.classList.add("filtered-out");
+            }
+        }
+        else if (filter === "unwatched"){
+            if(!(card.classList.contains("watched"))){
+                card.classList.remove("filtered-out");
+            }
+            else{
+                card.classList.add("filtered-out");
+            }
+        }
+    }
+    );
+}
+
+filterBtns.forEach((button)=>
+    {
+        button.addEventListener('click', (event)=>
+            {
+                if(event.target.id.replace("filter-", "") === "all"){
+                    applyFilter("all");
+                }
+                else if(event.target.id.replace("filter-", "") === "watched"){
+                    applyFilter("watched");
+                }
+                else if(event.target.id.replace("filter-", "") === "unwatched"){
+                    applyFilter("unwatched");
+                }
+            }
+        );
+    }
+);
+
+
+clearWatchedbtn.addEventListener("click", () => {
+  // 1. Select all cards that currently have the "watched" class
+  //    hint: movieList.querySelectorAll(".watched")
+        const movWat = movieList.querySelectorAll(".watched");
+    //  THIS MAKES IT INTO A NODE LIST | TREAT AS ARRAY
+  // 2. Loop over them and call .remove() on each
+       movWat.forEach((card)=>{
+        card.remove()
+       });
+  // 3. Call updateCount()
+        updateCount();
+  // 4. Call applyFilter(currentFilter)
+        applyFilter(currentFilter);
+}
+);

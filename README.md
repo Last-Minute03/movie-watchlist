@@ -1,1 +1,1 @@
-did phase 4 working on phase 5 now, most likely wont finish by the time of end of class
+The basics are done, all phases all buttons work. just gotta make it pretty now.
